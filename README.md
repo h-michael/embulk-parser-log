@@ -9,26 +9,33 @@ TODO: Write short description here and embulk-parser-ltsv.gemspec file.
 
 ## Configuration
 
-- **option1**: description (integer, required)
-- **option2**: description (string, default: `"myvalue"`)
-- **option3**: description (string, default: `null`)
+- columns: description (array, required)
 
 ## Example
+If you have apache logs that format is 'ltsv' like this,
+```domain:example.com/t/tident:-/tuser:-/ttime:21/Aug/2015:10:57:01 +0900/tprotocol:HTTP/1.1/tstatus:200/tsize:62443/treferer:-/t```
 
 ```yaml
 in:
   type: any file input plugin type
   parser:
     type: ltsv
-    option1: example1
-    option2: example2
+    columns:
+    - {name: domain ,type: string}
+    - {name: ident ,type: string}
+    - {name: user, type: string}
+    - {name: time ,type: timestamp, format: '%d/%b/%Y:%H:%M:%S %z'}
+    - {name: protocol ,type: string}
+    - {name: status ,type: string}
+    - {name: size ,type: long}
+    - {name: referer ,type: string}
+exec: {}
+out: {type: stdout}
 ```
 
-(If guess supported) you don't have to write `parser:` section in the configuration file. After writing `in:` section, you can let embulk guess `parser:` section using this command:
 
 ```
 $ embulk gem install embulk-parser-ltsv
-$ embulk guess -g ltsv config.yml -o guessed.yml
 ```
 
 ## Build
